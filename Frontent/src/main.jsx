@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import ProductDetails from "./screens/ProductDetails.jsx";
+import CardScreen from "./screens/CardScreen.jsx";
+import SignIn from "./screens/SignIn.jsx";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/Styles/bootstrap.custom.css";
 import "./assets/Styles/index.css";
@@ -18,6 +20,8 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route index="true" path="/" element={<HomeScreen />} />
       <Route path="/product/:id" element={<ProductDetails/>}/>
+      <Route path="/cart" element={<CardScreen/>} />
+      <Route path="/signin" element={<SignIn/>} />
     </Route>
   )
 );

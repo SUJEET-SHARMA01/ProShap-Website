@@ -2,6 +2,8 @@ import React from "react";
 import OffcanvasExample from "./components/Navbar";
 import Container from "react-bootstrap/esm/Container";
 import Footer from "./components/Footer";
+import {Outlet} from "react-router-dom"
+
 
 function App() {
   return (
@@ -9,10 +11,10 @@ function App() {
       <OffcanvasExample />
       <main>
         <Container>
-          <h1>Welcome </h1>
+          <Outlet/>
         </Container>
       </main>
-      <Footer/>
+      <Footer />
     </header>
   );
 }
