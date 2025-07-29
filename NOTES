@@ -4,3 +4,14 @@ npm i react-bootstrap bootstrap  react-icons
 import 'bootstrap/dist/css/bootstrap.min.css';(Main.jsx)
 npm i react-router-dom
 npm i react-router-bootstrap
+
+
+
+
+
+
+backend
+
+
+npm i express nodemon 
+
