@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';(Main.jsx)
 npm i react-router-dom
 npm i react-router-bootstrap
 
-
+@=%40 i your are add in password then replace it in mongo_db url
 
 
 

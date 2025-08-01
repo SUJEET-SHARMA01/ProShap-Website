@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build":"vite build",
+    "build": "vite build",
     "start": "node backend/index.js",
     "server": "nodemon backend/index.js",
     "client": "npm start --prefix Frontent",
@@ -15,7 +15,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^8.17.0"
   },
   "devDependencies": {
     "concurrently": "^9.2.0",

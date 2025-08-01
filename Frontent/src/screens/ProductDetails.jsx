@@ -1,24 +1,38 @@
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import products from "../products";
+import products from "../components/Product";
+import { useState, useEffect } from "react";
 import { Row, Col, Button, Card, Image, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
+import axios from "axios";
 
 function ProductDetails() {
   const { id: productId } = useParams();
-  const product = products.find((p) => p._id === productId);
-  console.log(product);
+
+  const [product, setProduct] = useState(null); // use null instead of []
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(`/api/products/${productId}`); // fixed typo: 'prodict' -> 'products'
+        setProduct(data);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        setProduct(null); // explicitly set null if product not found or error
+      }
+    };
+    fetchData();
+  }, [productId]);
 
   if (!product) {
     return <h2>Product not found</h2>;
   }
-
   return (
     <>
       <Link className="btn btn-light my-4" to="/">
-       Go Back
+        Go Back
       </Link>
 
       <Row>
