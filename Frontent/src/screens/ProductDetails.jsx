@@ -1,34 +1,43 @@
-import React from "react";
-import { FaArrowLeft } from "react-icons/fa";
-import { useParams } from "react-router-dom";
-import products from "../components/Product";
-import { useState, useEffect } from "react";
-import { Row, Col, Button, Card, Image, ListGroup } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { Row, Col, Button, Card, Image, ListGroup, Spinner } from "react-bootstrap";
 import Rating from "../components/Rating";
 import axios from "axios";
 
 function ProductDetails() {
   const { id: productId } = useParams();
-
-  const [product, setProduct] = useState(null); // use null instead of []
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/api/products/${productId}`); // fixed typo: 'prodict' -> 'products'
+        setLoading(true);
+        const { data } = await axios.get(`/api/products/${productId}`);
         setProduct(data);
-      } catch (error) {
-        console.error("Error fetching product:", error);
-        setProduct(null); // explicitly set null if product not found or error
+        setLoading(false);
+      } catch (err) {
+        setError("Product not found or an error occurred.");
+        setLoading(false);
       }
     };
     fetchData();
   }, [productId]);
 
-  if (!product) {
-    return <h2>Product not found</h2>;
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <Spinner animation="border" role="status" />
+        <p>Loading product...</p>
+      </div>
+    );
   }
+
+  if (error) {
+    return <h2 className="text-danger">{error}</h2>;
+  }
+
   return (
     <>
       <Link className="btn btn-light my-4" to="/">
@@ -51,8 +60,12 @@ function ProductDetails() {
                 text={`${product.numReviews} Reviews`}
               />
             </ListGroup.Item>
-            <ListGroup.Item>Price: ₹{product.price}</ListGroup.Item>
-            <ListGroup.Item>Description: {product.description}</ListGroup.Item>
+            <ListGroup.Item>
+              <strong>Price:</strong> ₹{product.price}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <strong>Description:</strong> {product.description}
+            </ListGroup.Item>
           </ListGroup>
         </Col>
 
@@ -79,7 +92,7 @@ function ProductDetails() {
 
               <ListGroup.Item>
                 <Button
-                  className="btn-block"
+                  className="btn-block w-100"
                   type="button"
                   disabled={product.countInStock === 0}
                 >

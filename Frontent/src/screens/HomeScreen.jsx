@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
-import Product from "../components/Product"; // Make sure this path is correct
+import Product from "../components/Product";
 
 function HomeScreen() {
   const [products, setProducts] = useState([]);
@@ -21,16 +21,16 @@ function HomeScreen() {
   }, []);
 
   return (
-    <>
-      <h1>Latest Products</h1>
+    <Container>
+      <h1 className="my-3">Latest Products</h1>
       <Row>
         {products.map((product) => (
-          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+          <Col key={product._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
             <Product product={product} />
           </Col>
         ))}
       </Row>
-    </>
+    </Container>
   );
 }
 

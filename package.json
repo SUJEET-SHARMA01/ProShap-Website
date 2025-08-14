@@ -3,19 +3,23 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "vite build",
     "start": "node backend/index.js",
     "server": "nodemon backend/index.js",
     "client": "npm start --prefix Frontent",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "data:import": "node backend/seeder.js",
+    "data:destroy": "node backend/seeder.js -d"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "colors": "^1.4.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0"
