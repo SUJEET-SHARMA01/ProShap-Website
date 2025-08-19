@@ -7,9 +7,9 @@ import {Outlet} from "react-router-dom"
 
 function App() {
   return (
-    <header>
+    <header  className="d-flex flex-column min-vh-100">
       <OffcanvasExample />
-      <main>
+      <main className="flex-grow-1">
         <Container>
           <Outlet/>
         </Container>

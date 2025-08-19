@@ -1,15 +1,46 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Row, Col, Button, Card, Image, ListGroup, Spinner } from "react-bootstrap";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { addToCart } from "../slices/cartSlice";
+import {
+  Row,
+  Col,
+  Button,
+  Card,
+  Image,
+  ListGroup,
+  Spinner,
+  Form,
+} from "react-bootstrap";
 import Rating from "../components/Rating";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
 function ProductDetails() {
   const { id: productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [qty, setQty] = useState(1);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [showToast, setShowToast] = useState(false);
 
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+  const addToCartHandler = () => {
+    dispatch(addToCart({ ...product, qty })); // ✅ correct payload
+    // ✅ Show toast notification
+    toast.success(`${product.name} added to cart!`, {
+      position: "top-right",
+      autoClose: 3000,
+    });
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,7 +79,6 @@ function ProductDetails() {
         <Col md={5}>
           <Image src={product.image} alt={product.name} fluid />
         </Col>
-
         <Col md={4}>
           <ListGroup variant="flush">
             <ListGroup.Item>
@@ -68,7 +98,6 @@ function ProductDetails() {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-
         <Col md={3}>
           <Card>
             <ListGroup variant="flush">
@@ -80,7 +109,6 @@ function ProductDetails() {
                   </Col>
                 </Row>
               </ListGroup.Item>
-
               <ListGroup.Item>
                 <Row>
                   <Col>Status:</Col>
@@ -89,12 +117,32 @@ function ProductDetails() {
                   </Col>
                 </Row>
               </ListGroup.Item>
-
+              {product.countInStock > 0 && (
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Qty</Col>
+                    <Col>
+                      <Form.Control
+                        as="select"
+                        value={qty}
+                        onChange={(e) => setQty(Number(e.target.value))}
+                      >
+                        {[...Array(product.countInStock).keys()].map((x) => (
+                          <option key={x + 1} value={x + 1}>
+                            {x + 1}
+                          </option>
+                        ))}
+                      </Form.Control>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
               <ListGroup.Item>
                 <Button
                   className="btn-block w-100"
                   type="button"
                   disabled={product.countInStock === 0}
+                  onClick={addToCartHandler}
                 >
                   Add To Cart
                 </Button>
@@ -103,8 +151,9 @@ function ProductDetails() {
           </Card>
         </Col>
       </Row>
+      {/* ✅ Toast Notification */}
+      <ToastContainer />
     </>
   );
 }
-
 export default ProductDetails;
