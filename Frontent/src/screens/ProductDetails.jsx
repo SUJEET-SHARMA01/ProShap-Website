@@ -38,7 +38,7 @@ function ProductDetails() {
     // ✅ Show toast notification
     toast.success(`${product.name} added to cart!`, {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 2000,
     });
   };
   useEffect(() => {

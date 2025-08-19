@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Message from "../components/Message"
+import { MdDelete } from "react-icons/md";
+import Message from "../components/Message";
 import {
   Row,
   Col,
@@ -12,17 +13,29 @@ import {
   Card,
 } from "react-bootstrap";
 
-// Actions expected in your cartSlice
-// addToCart(payload: { _id, name, image, price, countInStock, qty })
-// removeFromCart(productId: string)
-import { addToCart} from "../slices/cartSlice"; // <- adjust if your paths differ
-
+// ✅ import both addToCart & removeFromCart
+import { addToCart, removeFromCart } from "../slices/cartSlice";
 export default function CartScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cartItems = [] } = useSelector((state) => state.cart || {});
 
-  
+  const removeFromCartHandler = (id) => {
+    dispatch(removeFromCart(id));
+  };
+
+  const qtyChangeHandler = (item, newQty) => {
+    const qty = Math.max(
+      1,
+      Math.min(Number(newQty) || 1, item.countInStock || 1)
+    );
+    dispatch(addToCart({ ...item, qty }));
+  };
+
+  const checkoutHandler = () => {
+    navigate("/login?redirect=/shipping");
+  };
+
   const itemsCount = cartItems.reduce((acc, item) => acc + (item.qty || 0), 0);
   const itemsTotal = cartItems
     .reduce((acc, item) => acc + (item.price || 0) * (item.qty || 0), 0)
@@ -54,10 +67,15 @@ export default function CartScreen() {
                   </Col>
 
                   <Col xs={9} md={4}>
-                    <Link to={`/product/${item._id}`} className="text-decoration-none">
+                    <Link
+                      to={`/product/${item._id}`}
+                      className="text-decoration-none"
+                    >
                       <div className="fw-semibold text-dark">{item.name}</div>
                     </Link>
-                    <div className="small text-muted">₹ {Number(item.price).toFixed(2)}</div>
+                    <div className="small text-muted">
+                      ₹ {Number(item.price).toFixed(2)}
+                    </div>
                   </Col>
 
                   <Col xs={6} md={3} className="mt-2 mt-md-0">
@@ -79,10 +97,11 @@ export default function CartScreen() {
                     <Button
                       type="button"
                       variant="light"
-                      className="border"
+                      size="sm"
                       onClick={() => removeFromCartHandler(item._id)}
+                      title="Remove item"
                     >
-                      <i className="fas fa-trash" />
+                      <MdDelete />
                     </Button>
                   </Col>
                 </Row>
@@ -90,6 +109,23 @@ export default function CartScreen() {
             ))}
           </ListGroup>
         )}
+      </Col>
+
+      {/* ✅ Summary Section */}
+      <Col md={4}>
+        <Card className="p-3 ">
+          <h4>Subtotal ({itemsCount}) items</h4>
+          <h5>₹ {itemsTotal}</h5>
+          <hr />
+          <Button
+            type="button"
+            className="btn-block mt-3"
+            disabled={cartItems.length === 0}
+            onClick={checkoutHandler}
+          >
+            Proceed To Checkout
+          </Button>
+        </Card>
       </Col>
     </Row>
   );
